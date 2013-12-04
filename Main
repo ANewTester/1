@@ -1,0 +1,38 @@
+import praw
+import configparser
+import time
+r = praw.Reddit('I stole your script to test it Sorry not sorry lol jk')
+
+#Parse settings.config
+config = configparser.ConfigParser()
+config.read('settings.cfg')
+username = config.get('auth', 'throwawaytestbot')
+password = config.get('auth', 'password')
+
+#Now login
+r.login(throwawaytestbot, password)
+
+#Now do some setting up
+already_done = [ ]
+finished = False
+
+
+#Main Loop
+while True:
+    subreddit = r.get_subreddit(config.get('settings', 'sub'))
+    numlimit = 5
+    smsn=subreddit.get_hot(limit=numlimit)
+
+
+    while finished != True:
+        for submission in smsn:
+            if (submission.id in already_done):
+                finished = True
+                break
+            else:
+                print(submission)
+                comment = 'DOOM!'
+                submission.add_comment(comment)
+                already_done.append(submission.id)
+            time.sleep(5000)
+    time.sleep(60000)
